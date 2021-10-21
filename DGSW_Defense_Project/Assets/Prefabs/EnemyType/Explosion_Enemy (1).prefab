@@ -211,6 +211,7 @@ GameObject:
   - component: {fileID: 4210157135251289118}
   - component: {fileID: 2102252312235686633}
   - component: {fileID: 3057160952459685031}
+  - component: {fileID: 844877723015191606}
   m_Layer: 0
   m_Name: Explosion_Enemy (1)
   m_TagString: ' Explosion_Enemy'
@@ -347,6 +348,28 @@ MonoBehaviour:
   target: {fileID: 0}
   point: {fileID: 0}
   effectObj: {fileID: 1273649047279282, guid: db73335f96242494c8bb52924a1bc1b7, type: 3}
+--- !u!195 &844877723015191606
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7753063953819853714}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &7753064172233682852
 GameObject:
   m_ObjectHideFlags: 0

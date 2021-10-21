@@ -9,10 +9,13 @@ public class Explosion_Enemy_Controller : MonoBehaviour
     Enemy_Status e_status; // Enenmy 상태
     Player_Status p_status;
     NavMeshAgent nav;
+    Rigidbody rigid;
 
     //public GameObject particle;
     public Transform target; // 플레이어 추적
     public Transform point; // 포인트 추적 
+
+
     private float speed; // 이동속도
     bool Move;
     bool isdelay;
@@ -25,6 +28,7 @@ public class Explosion_Enemy_Controller : MonoBehaviour
     void Awake()
     {
         Enemyanimator = GetComponent<Animator>();
+        rigid = GetComponent<Rigidbody>();
         nav = GetComponent<NavMeshAgent>();
     }
 
@@ -99,6 +103,16 @@ public class Explosion_Enemy_Controller : MonoBehaviour
             RotateEnemy();
             EnemyMove();
         }
+    }
+    void FreezeVelocity()
+    {
+        rigid.velocity = Vector3.zero;
+        rigid.angularVelocity = Vector3.zero;
+    }
+
+    void FixedUpdate()
+    {
+        FreezeVelocity();
     }
 
     void EnemyAttack()

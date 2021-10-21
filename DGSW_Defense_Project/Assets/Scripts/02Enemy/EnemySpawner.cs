@@ -53,7 +53,7 @@ public class EnemySpawner : MonoBehaviour
         Debug.Log("[ES]Spawn / test");
 
         timeAfterSpawn = 0f; //리셋  
-        if (GameManager.instance.round > 0)
+        if (GameManager.instance.round > 0 && GameManager.instance.round < 6)
         {
             GameObject defalt = Instantiate(defalt_EnemyPrefabs, spawnPoints[ranNumx]);//
             GameObject aerial = Instantiate(aerial_EnemyPrefabs, spawnPoints[ranNumx]);

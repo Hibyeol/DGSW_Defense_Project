@@ -9,11 +9,11 @@ public class Defalt_Enemy_Controller : MonoBehaviour
     Enemy_Status e_status; // Enenmy 상태
     Player_Status p_status;
     NavMeshAgent nav;
+    Rigidbody rigid;
 
     public Transform target; // 플레이어 추적
     public Transform point; // 포인트 추적 
-    Rigidbody rigid;
-
+    
     private float speed; // 이동속도
     bool Move;
     bool isdelay;
