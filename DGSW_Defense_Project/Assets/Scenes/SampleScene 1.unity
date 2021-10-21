@@ -18997,7 +18997,17 @@ PrefabInstance:
     - target: {fileID: 678880209967092768, guid: 10e96b44017284a4a92f92efd7a4550a,
         type: 3}
       propertyPath: jumpHeight
-      value: 1
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 678880209967092768, guid: 10e96b44017284a4a92f92efd7a4550a,
+        type: 3}
+      propertyPath: groundMask.m_Bits
+      value: 4096
+      objectReference: {fileID: 0}
+    - target: {fileID: 678880209967092768, guid: 10e96b44017284a4a92f92efd7a4550a,
+        type: 3}
+      propertyPath: gunBlueprint.reloadTime
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 678880209967092768, guid: 10e96b44017284a4a92f92efd7a4550a,
         type: 3}
@@ -19583,6 +19593,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8771350744906782930, guid: 10e96b44017284a4a92f92efd7a4550a,
+        type: 3}
+      propertyPath: m_Height
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 10e96b44017284a4a92f92efd7a4550a, type: 3}

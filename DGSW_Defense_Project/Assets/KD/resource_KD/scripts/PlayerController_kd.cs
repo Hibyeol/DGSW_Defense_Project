@@ -11,8 +11,8 @@ public class PlayerController_kd : MonoBehaviour
 
 	public CharacterController player;
 
-	float x;
-	float z;
+	float h;
+	float v;
 	bool jump;
 
 	public float speed = 0.0f;
@@ -28,6 +28,8 @@ public class PlayerController_kd : MonoBehaviour
 	private float cur_hp;// 현재 자신의 체력
 
 	bool isGrounded;
+	bool isJumping;
+
 	int isMoving;
 
 	public Animator animator;
@@ -38,9 +40,9 @@ public class PlayerController_kd : MonoBehaviour
 	public GameObject firePoint;
 	public Transform aim;
 
-	bool ifClick = false;
-	bool ifFireRate = false;
-	bool reload = false;
+	bool isClick = false;
+	bool isFireRate = false;
+	bool isReload = false;
 
 	float timer = 0.0f;
 
@@ -57,48 +59,60 @@ public class PlayerController_kd : MonoBehaviour
 
 	}
 
-	void FixedUpdate()
-	{
-		x = Input.GetAxis("Horizontal");
-		z = Input.GetAxis("Vertical");
-		jump = Input.GetButtonDown("Jump");
-		ifClick = Input.GetButton("Fire1");
-	}
+	//void FixedUpdate()
+	//{
+	//	x = Input.GetAxis("Horizontal");
+	//	z = Input.GetAxis("Vertical");
+	//	jump = Input.GetButtonDown("Jump");
+	//	ifClick = Input.GetButton("Fire1");
+	//}
 
 	void Update()
 	{
-		Move();
-		Jump();
-		GetSpeed();
-		MoveCheck();
-		GroundCheck();
-		PlayAnimation();
-		Fire();
-		FireRateCountdown();
-	}
+		// 플레이어 입력
+		h = Input.GetAxis("Horizontal");
+		v = Input.GetAxis("Vertical");
 
-	void Move()
-	{
+		/*
+		// 플레이어 이동 방향 설정 1-1 (상대좌표로 변경)
+		Vector3 dir = new Vector3(h, 0, v);
+		dir = dir.normalized;
 		
-		
-		Vector3 move = transform.right * x + transform.forward * z;
+		// 카메라를 기준으로 방향 설정 1-2
+		dir = Camera.main.transform.TransformDirection(dir);
+		*/
+
+		// 점프가 끝났는지 확인
+		if (isJumping && player.collisionFlags == CollisionFlags.Below)
+		{
+			// 점프 전 상태로 초기화한다.
+			isJumping = false;
+			// 캐릭터 수직 속도를 0으로 만든다.
+			velocity.y = 0;
+		}
+		// 점프를 하고 있지 않다면 스페이스 바를 눌렀을 시 점프
+		if (Input.GetButtonDown("Jump") && !isJumping)
+		{
+			// 캐릭터 수직 속도에 점프력을 적용하고 점프 상태로 변경한다.
+			velocity.y = jumpHeight;
+			isJumping = true;
+		}
+
+
+		// 캐릭터 수직 속도에 중력 값을 적용한다.
+		//velocity.y += gravity * Time.deltaTime;
+		//dir.y = velocity.y;
+
+
+		// 플레이어 움직임 제어
+		Vector3 move = transform.right * h + transform.forward * v;
 		player.Move(move * speed * Time.deltaTime);
 
+		// 캐릭터의 이동 애니메이션 제어
 		velocity.y += gravity * Time.deltaTime;
 		player.Move(velocity * Time.deltaTime);
-	}
-
-	void Jump()
-	{
-		if (jump)
-		{
-			velocity.y = Mathf.Sqrt(jumpHeight * -2.0f * gravity);
-		}
-	}
-
-	void MoveCheck()
-	{
-		if (x != 0 || z != 0)
+		// 움직이고 있는지 확인
+		if (h != 0 || v != 0)
 		{
 			isMoving = 1;
 		}
@@ -106,25 +120,113 @@ public class PlayerController_kd : MonoBehaviour
 		{
 			isMoving = 0;
 		}
-	}
-	void GroundCheck()
-	{
-		isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
-		if (isGrounded && velocity.y < 0)
+		speed = Mathf.Lerp(0.0f, playerBlueprint.speed, isMoving * 0.3f);
+		animator.SetFloat("Speed_f", speed);
+
+		// 캐릭터의 공격 애니메이션 설정
+		animator.SetBool("Shoot_b", isClick);
+
+
+		isClick = Input.GetButton("Fire1");
+		// 캐릭터 공격
+		if (isClick && !isFireRate && !isReload)
 		{
-			velocity.y = -2.0f;
+			bullet = Instantiate(gunBlueprint.bullet, firePoint.transform.position, firePoint.transform.rotation);
+			bullet.GetComponent<Rigidbody>().AddForce(bullet.transform.forward * gunBlueprint.bulletSpeed);
+			Destroy(bullet, 2.0f);
+
+			//CameraShaker.Instance.ShakeOnce(4f, 4f, .1f, 0f); 카메라 흔들림 제어
+
+			magazine--;
+			if (magazine == 0)
+			{
+				isReload = true;
+				timer = gunBlueprint.reloadTime;
+			}
+			else
+			{
+				isFireRate = true;
+				timer = gunBlueprint.fireRate;
+
+			}
+		}
+
+		if (timer >= 0)
+		{
+			timer -= Time.deltaTime;
+		}
+		else if (isFireRate)
+		{
+			isFireRate = false;
+		}
+		else if (isReload)
+		{
+			isReload = false;
+			magazine = gunBlueprint.magazine;
 		}
 	}
 
-	void GetSpeed()
-	{
-		speed = Mathf.Lerp(0.0f, playerBlueprint.speed, isMoving * 0.3f);
-	}
+	//void Update()
+	//{
 
-	void PlayAnimation()
-	{
-		animator.SetFloat("Speed_f", speed);
-	}
+	//Move();
+	//Jump();
+	//GetSpeed();
+	//MoveCheck();
+	//GroundCheck();
+	//PlayAnimation();
+	//Fire();
+	//FireRateCountdown();
+	//}
+
+	//void Move()
+	//{
+		
+		
+	//	Vector3 move = transform.right * x + transform.forward * z;
+	//	player.Move(move * speed * Time.deltaTime);
+
+	//	velocity.y += gravity * Time.deltaTime;
+	//	player.Move(velocity * Time.deltaTime);
+	//}
+
+	//void Jump()
+	//{
+	//	if (jump)
+	//	{
+	//		velocity.y = Mathf.Sqrt(jumpHeight * -2.0f * gravity);
+	//	}
+	//}
+
+	//void MoveCheck()
+	//{
+	//	if (x != 0 || z != 0)
+	//	{
+	//		isMoving = 1;
+	//	}
+	//	else
+	//	{
+	//		isMoving = 0;
+	//	}
+	//}
+	//void GroundCheck()
+	//{
+	//	isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+	//	if (isGrounded && velocity.y < 0)
+	//	{
+	//		velocity.y = -2.0f;
+	//	}
+	//}
+
+	//void GetSpeed()
+	//{
+	//	speed = Mathf.Lerp(0.0f, playerBlueprint.speed, isMoving * 0.3f);
+	//}
+
+	//void PlayAnimation()
+	//{
+	//	animator.SetFloat("Speed_f", speed);
+	//}
 
 	void Death()
 	{
@@ -132,40 +234,40 @@ public class PlayerController_kd : MonoBehaviour
 			animator.SetBool("Death_b", true);
 	}
 
-	void Fire()
-	{
-		animator.SetBool("Shoot_b", ifClick);
-		//Debug.Log(firePoint.transform.position);
-		if (ifClick && !ifFireRate)
-		{
-			bullet = Instantiate(gunBlueprint.bullet, firePoint.transform.position, firePoint.transform.rotation);
-			bullet.GetComponent<Rigidbody>().AddForce(bullet.transform.forward * gunBlueprint.bulletSpeed);
-			Destroy(bullet, 2.0f);
+	//void Fire()
+	//{
+	//	animator.SetBool("Shoot_b", isClick);
+	//	//Debug.Log(firePoint.transform.position);
+	//	if (isClick && !isFireRate)
+	//	{
+	//		bullet = Instantiate(gunBlueprint.bullet, firePoint.transform.position, firePoint.transform.rotation);
+	//		bullet.GetComponent<Rigidbody>().AddForce(bullet.transform.forward * gunBlueprint.bulletSpeed);
+	//		Destroy(bullet, 2.0f);
 
-			magazine--;
-			if (magazine == 0)
-			{
-				reload = true;
-			}
-			else
-			{
-				timer = gunBlueprint.fireRate;
-				ifFireRate = true;
-			}
-		}
-	}
+	//		magazine--;
+	//		if (magazine == 0)
+	//		{
+	//			reload = true;
+	//		}
+	//		else
+	//		{
+	//			timer = gunBlueprint.fireRate;
+	//			isFireRate = true;
+	//		}
+	//	}
+	//}
 
-	void FireRateCountdown()
-	{
-		if (timer >= 0)
-		{
-			timer -= Time.deltaTime;
-		}
-		else
-		{
-			ifFireRate = false;
-		}
-	}
+	//void FireRateCountdown()
+	//{
+	//	if (timer >= 0)
+	//	{
+	//		timer -= Time.deltaTime;
+	//	}
+	//	else
+	//	{
+	//		isFireRate = false;
+	//	}
+	//}
 
 	void Setup()
 	{
@@ -178,7 +280,7 @@ public class PlayerController_kd : MonoBehaviour
 
 	}
 
-	public void HitByExplosion(Vector3 explosionPos)
+	public void HitByExplosion(Vector3 explosionPos) // 폭발형
 	{
 		cur_hp -= e_status.explosion_Damage;
 		Debug.Log("Explosion_Enemy_atk : " + cur_hp);
@@ -189,7 +291,7 @@ public class PlayerController_kd : MonoBehaviour
 		//Debug.Log("[PlayreController]OntriggerEnter");
 		//Debug.Log("[PlayreController]OnTriggerEnter/other : " + other);
 
-		if (other.tag == "Enemy_atk")
+		if (other.tag == "Enemy_atk")// 기본형
 		{
 
 			Debug.Log("[PlayreController]OntriggerEnter/e.status.defalt_Damage : " + e_status.defalt_Damage);
@@ -198,13 +300,35 @@ public class PlayerController_kd : MonoBehaviour
 			Debug.Log("Enemy_atk : " + cur_hp);
 		}
 
-		if (other.tag == "Aerial_atk")
+		if (other.tag == "Aerial_atk")// 공중형
 		{
 			Debug.Log("[PlayreController]OntriggerEnter/e.status.aerial_Damage : " + e_status.aerial_Damage);
 			cur_hp -= e_status.aerial_Damage;
 
 			Debug.Log("Aerial_atk : " + cur_hp);
 		}
+		if (other.tag == "Speed_atk")// 속도형
+		{
+			Debug.Log("[PlayreController]OntriggerEnter/e.status.speed_Damage : " + e_status.speed_Damage);
+			cur_hp -= e_status.speed_Damage;
+
+			Debug.Log("Speed_atk : " + cur_hp);
+		}
+		if (other.tag == "Physical_atk") // 체력형
+		{
+			Debug.Log("[PlayreController]OntriggerEnter/e.status.physical_Damage : " + e_status.physical_Damage);
+			cur_hp -= e_status.physical_Damage;
+
+			Debug.Log("physical_Damage : " + cur_hp);
+		}
+		if (other.tag == "Reinforced_atk") // 강화형
+		{
+			Debug.Log("[PlayreController]OntriggerEnter/e.status.reinforced_Damage : " + e_status.reinforced_Damage);
+			cur_hp -= e_status.reinforced_Damage;
+
+			Debug.Log("Reinforced_atk : " + cur_hp);
+		}
+
 	}
 	
 }

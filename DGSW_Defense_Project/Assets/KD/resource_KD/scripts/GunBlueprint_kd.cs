@@ -11,6 +11,7 @@ public class GunBlueprint_kd
     public int damage;
     public float fireRate;
     public float fireRange;
+    public float reloadTime;
     public GameObject bullet;
     public float bulletSpeed;
     /*
