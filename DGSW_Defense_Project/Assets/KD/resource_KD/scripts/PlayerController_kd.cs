@@ -128,7 +128,7 @@ public class PlayerController_kd : MonoBehaviour
 
 	void Death()
 	{
-		if (cur_hp < 0)
+		if (cur_hp <= 0)
 			animator.SetBool("Death_b", true);
 	}
 
@@ -186,7 +186,7 @@ public class PlayerController_kd : MonoBehaviour
 
 	void OnTriggerEnter(Collider other)
 	{
-		Debug.Log("[PlayreController]OntriggerEnter");
+		//Debug.Log("[PlayreController]OntriggerEnter");
 		//Debug.Log("[PlayreController]OnTriggerEnter/other : " + other);
 
 		if (other.tag == "Enemy_atk")
@@ -206,4 +206,5 @@ public class PlayerController_kd : MonoBehaviour
 			Debug.Log("Aerial_atk : " + cur_hp);
 		}
 	}
+	
 }

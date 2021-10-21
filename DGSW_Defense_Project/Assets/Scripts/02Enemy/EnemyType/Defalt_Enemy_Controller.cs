@@ -13,7 +13,7 @@ public class Defalt_Enemy_Controller : MonoBehaviour
 
     public Transform target; // 플레이어 추적
     public Transform point; // 포인트 추적 
-    
+
     private float speed; // 이동속도
     bool Move;
     bool isdelay;
@@ -70,7 +70,6 @@ public class Defalt_Enemy_Controller : MonoBehaviour
                 nav.SetDestination(target.position);
                 //transform.Translate(Vector3.forward * e_status.defalt_Speed * Time.deltaTime, Space.Self);
             }
-
             if ((target.position - transform.position).magnitude < 3)
             {
                 Enemyanimator.SetBool("Forward", false);
