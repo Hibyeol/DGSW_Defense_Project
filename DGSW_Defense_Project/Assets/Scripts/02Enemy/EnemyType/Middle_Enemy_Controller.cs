@@ -34,7 +34,7 @@ public class Middle_Enemy_Controller : MonoBehaviour
     {
         e_status = FindObjectOfType<Enemy_Status>();
         p_status = FindObjectOfType<Player_Status>();
-        health = e_status.defalt_Health;
+        health = e_status.middle_Health;
         Move = true;
         target = GameObject.FindWithTag("Player").transform;
         point = GameObject.FindWithTag("Defanse_Point").transform;
@@ -64,13 +64,13 @@ public class Middle_Enemy_Controller : MonoBehaviour
     {
         if ((target.position - transform.position).magnitude < (point.position - transform.position).magnitude)
         {
-            if ((target.position - transform.position).magnitude >= 3)
+            if ((target.position - transform.position).magnitude >= 5)
             {
                 Enemyanimator.SetBool("Walk Forward Slow", true);
                 nav.SetDestination(target.position);
                 //transform.Translate(Vector3.forward * e_status.defalt_Speed * Time.deltaTime, Space.Self);
             }
-            if ((target.position - transform.position).magnitude < 3)
+            if ((target.position - transform.position).magnitude < 5)
             {
                 Enemyanimator.SetBool("Walk Forward Slow", false);
             }
@@ -78,14 +78,14 @@ public class Middle_Enemy_Controller : MonoBehaviour
 
         if ((target.position - transform.position).magnitude >= (point.position - transform.position).magnitude)
         {
-            if ((point.position - transform.position).magnitude >= 3)
+            if ((point.position - transform.position).magnitude >= 5)
             {
                 Enemyanimator.SetBool("Walk Forward Slow", true);
                 nav.SetDestination(point.position);
                 //transform.Translate(Vector3.forward * e_status.defalt_Speed * Time.deltaTime, Space.Self);
             }
 
-            if ((point.position - transform.position).magnitude < 3)
+            if ((point.position - transform.position).magnitude < 5)
             {
                 Enemyanimator.SetBool("Walk Forward Slow", false);
             }
@@ -114,17 +114,53 @@ public class Middle_Enemy_Controller : MonoBehaviour
 
     void EnemyAttack()
     {
-        if ((target.position - transform.position).magnitude <= 3)
+        if ((target.position - transform.position).magnitude <= 5)
         {
+            switch (atkStep)
+            {
+                case 0:
+                    atkStep += 1;
+                    Enemyanimator.Play("Claw Attack");
+                    break;
+                case 1:
+                    atkStep +=1 ;
+                    Enemyanimator.Play("Sting Attack");
+                    break;
+                case 2:
+                    atkStep += 1;
+                    Enemyanimator.Play("Swing Left Attack");
+                    break;
+                case 3:
+                    atkStep = 0; ;
+                    Enemyanimator.Play("Swing right Attack");
+                    break;
 
-            Debug.Log("[MEC]Enemy_Attack / Attack");
-            Enemyanimator.Play("Bite Attack");
+            }
         }
-        if ((point.position - transform.position).magnitude <= 3)
+        if ((point.position - transform.position).magnitude <= 5)
         {
 
             Debug.Log("[MEC]Enemy_Attack / Attack");
-            Enemyanimator.Play("Bite Attack");
+            switch (atkStep)
+            {
+                case 0:
+                    atkStep += 1;
+                    Enemyanimator.Play("Claw Attack");
+                    break;
+                case 1:
+                    atkStep += 1;
+                    Enemyanimator.Play("Sting Attack");
+                    break;
+                case 2:
+                    atkStep += 1;
+                    Enemyanimator.Play("Swing Left Attack");
+                    break;
+                case 3:
+                    atkStep = 0; ;
+                    Enemyanimator.Play("Swing right Attack");
+                    break;
+
+            }
         }
     }
 
@@ -151,7 +187,7 @@ public class Middle_Enemy_Controller : MonoBehaviour
    
         Destroy(gameObject, 3f);
         GameManager.instance.enemy_Death++;
-        GameManager.instance.score += 50;
+        GameManager.instance.score += 750;
         Debug.Log("[MEC]Death / Death : " + GameManager.instance.enemy_Death);
 
     }

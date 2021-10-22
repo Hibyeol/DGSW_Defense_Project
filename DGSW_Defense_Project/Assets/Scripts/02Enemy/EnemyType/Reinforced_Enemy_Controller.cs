@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Reinforced_Enemy_Controller : MonoBehaviour
 {
     Animator Enemyanimator; // 애니메이터 
     Enemy_Status e_status; // Enenmy 상태
     Player_Status p_status;
+    NavMeshAgent nav;
 
     public Transform target; // 플레이어 추적
     public Transform point; // 포인트 추적 
@@ -24,6 +26,7 @@ public class Reinforced_Enemy_Controller : MonoBehaviour
     {
         Enemyanimator = GetComponent<Animator>();
         rigid = GetComponent<Rigidbody>();
+        nav = GetComponent<NavMeshAgent>();
     }
 
 
@@ -35,6 +38,7 @@ public class Reinforced_Enemy_Controller : MonoBehaviour
         Move = true;
         target = GameObject.FindWithTag("Player").transform;
         point = GameObject.FindWithTag("Defanse_Point").transform;
+        isdelay = true;
 
     }
     void RotateEnemy()
@@ -63,7 +67,8 @@ public class Reinforced_Enemy_Controller : MonoBehaviour
             if ((target.position - transform.position).magnitude >= 3)
             {
                 Enemyanimator.SetBool("Walk Forward Slow", true);
-                transform.Translate(Vector3.forward * e_status.reinforced_Speed * Time.deltaTime, Space.Self);
+                nav.SetDestination(target.position);
+                //transform.Translate(Vector3.forward * e_status.reinforced_Speed * Time.deltaTime, Space.Self);
             }
 
             if ((target.position - transform.position).magnitude < 3)
@@ -77,7 +82,8 @@ public class Reinforced_Enemy_Controller : MonoBehaviour
             if ((point.position - transform.position).magnitude >= 3)
             {
                 Enemyanimator.SetBool("Walk Forward Slow", true);
-                transform.Translate(Vector3.forward * e_status.reinforced_Speed * Time.deltaTime, Space.Self);
+                nav.SetDestination(point.position);
+                //transform.Translate(Vector3.forward * e_status.reinforced_Speed * Time.deltaTime, Space.Self);
             }
 
             if ((point.position - transform.position).magnitude < 3)
@@ -94,6 +100,17 @@ public class Reinforced_Enemy_Controller : MonoBehaviour
             RotateEnemy();
             EnemyMove();
         }
+    }
+
+    void FreezeVelocity()
+    {
+        rigid.velocity = Vector3.zero;
+        rigid.angularVelocity = Vector3.zero;
+    }
+
+    void FixedUpdate()
+    {
+        FreezeVelocity();
     }
 
     void EnemyAttack()
@@ -166,6 +183,7 @@ public class Reinforced_Enemy_Controller : MonoBehaviour
         Destroy(gameObject, 3f);
 
         GameManager.instance.enemy_Death++;
+        GameManager.instance.score += 250;
         Debug.Log("[REC]Death / Death : " + GameManager.instance.enemy_Death);
 
     }
@@ -178,9 +196,11 @@ public class Reinforced_Enemy_Controller : MonoBehaviour
             Destroy(other.gameObject);
             health -= 35;
             Debug.Log("[REC]OnTriggerEnter / health : " + health);
-            if (health <= 0)
+            if (health <= 0 && isdelay == true)
             {
                 Death();
+                isdelay = false;
+
             }
         }
     }

@@ -35,8 +35,8 @@ public class DefensePoint : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Ontrigger");
-        Debug.Log("[DP]OnTriggerEnter/other : "+ other);
+        //Debug.Log("Ontrigger");
+        //Debug.Log("[DP]OnTriggerEnter/other : "+ other);
 
         if (other.tag == "Enemy_atk")
         {
@@ -69,6 +69,22 @@ public class DefensePoint : MonoBehaviour
             cur_health -= e_status.speed_Damage;
 
             Debug.Log("Enemy_atk : " + cur_health);
+        }
+        if (other.tag == "Reinforced_atk")
+        {
+
+            Debug.Log("[DP]OnTriggerEnter/status.reinforced_Damage : " + e_status.reinforced_Damage);
+            cur_health -= e_status.reinforced_Damage;
+
+            Debug.Log("Reinforced_atk : " + cur_health);
+        }
+        if (other.tag == "Middle_atk")
+        {
+
+            Debug.Log("[DP]OnTriggerEnter/status.middle_Damage : " + e_status.middle_Damage);
+            cur_health -= e_status.middle_Damage;
+
+            Debug.Log("middle_Damage : " + cur_health);
         }
     }
 

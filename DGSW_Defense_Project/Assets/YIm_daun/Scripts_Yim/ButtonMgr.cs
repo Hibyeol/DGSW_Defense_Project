@@ -10,5 +10,6 @@ public class ButtonMgr : MonoBehaviour
     public void LoadGame()
     {
         SceneManager.LoadScene("SampleScene 1");
+        //SceneManager.LoadScene(SceneToLoad);
     }
 }

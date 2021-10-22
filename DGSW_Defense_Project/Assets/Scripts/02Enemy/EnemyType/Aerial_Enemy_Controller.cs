@@ -31,6 +31,7 @@ public class Aerial_Enemy_Controller : MonoBehaviour
     void Start()
     {
         e_status = FindObjectOfType<Enemy_Status>();
+        health = e_status.aerial_Health;
         Move = true;
         target = GameObject.FindWithTag("Player").transform; // 추적 대상 위치
         point = GameObject.FindWithTag("Defanse_Point").transform; // 추적 대상 위치
@@ -77,7 +78,7 @@ public class Aerial_Enemy_Controller : MonoBehaviour
             if ((point.position - transform.position).magnitude >= 3)
             {
                 Enemyanimator.SetBool("Forward", true);
-                nav.SetDestination(target.position);
+                nav.SetDestination(point.position);
                 //transform.Translate(Vector3.forward * e_status.defalt_Speed * Time.deltaTime, Space.Self);
             }
 

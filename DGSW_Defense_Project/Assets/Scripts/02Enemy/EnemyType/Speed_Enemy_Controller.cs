@@ -1,13 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Speed_Enemy_Controller: MonoBehaviour
 {
     Animator Enemyanimator; // 애니메이터 
     Enemy_Status e_status; // Enenmy 상태
+    Rigidbody rigid;
+    NavMeshAgent nav;
+
     public Transform target; // 추적 대상
     public Transform point; // 포인트 추적
+    
     private float speed; // 이동속도
 
     bool Move;
@@ -19,6 +24,8 @@ public class Speed_Enemy_Controller: MonoBehaviour
     void Awake()
     {
         Enemyanimator = GetComponent<Animator>();
+        rigid = GetComponent<Rigidbody>();
+        nav = GetComponent<NavMeshAgent>();
     }
 
 
@@ -29,6 +36,7 @@ public class Speed_Enemy_Controller: MonoBehaviour
         health = e_status.speed_Health;
         target = GameObject.FindWithTag("Player").transform; // 추적 대상 위치
         point = GameObject.FindWithTag("Defanse_Point").transform; // 추적 대상 위치
+        isdelay = true;
     }
     void RotateEnemy()
     {
@@ -56,7 +64,8 @@ public class Speed_Enemy_Controller: MonoBehaviour
             if ((target.position - transform.position).magnitude >= 3)
             {
                 Enemyanimator.SetBool("Move Forward Slow", true);
-                transform.Translate(Vector3.forward * e_status.speed_Speed * Time.deltaTime, Space.Self);
+                nav.SetDestination(target.position);
+                //transform.Translate(Vector3.forward * e_status.speed_Speed * Time.deltaTime, Space.Self);
             }
 
             if ((target.position - transform.position).magnitude < 3)
@@ -70,7 +79,8 @@ public class Speed_Enemy_Controller: MonoBehaviour
             if ((point.position - transform.position).magnitude >= 3)
             {
                 Enemyanimator.SetBool("Move Forward Slow", true);
-                transform.Translate(Vector3.forward * e_status.speed_Speed * Time.deltaTime, Space.Self);
+                nav.SetDestination(point.position);
+                //transform.Translate(Vector3.forward * e_status.speed_Speed * Time.deltaTime, Space.Self);
             }
 
             if ((point.position - transform.position).magnitude < 3)
@@ -89,6 +99,16 @@ public class Speed_Enemy_Controller: MonoBehaviour
         }
     }
 
+    void FreezeVelocity()
+    {
+        rigid.velocity = Vector3.zero;
+        rigid.angularVelocity = Vector3.zero;
+    }
+
+    void FixedUpdate()
+    {
+        FreezeVelocity();
+    }
     void EnemyAttack()
     {
         if ((target.position - transform.position).magnitude <= 3)
@@ -150,25 +170,27 @@ public class Speed_Enemy_Controller: MonoBehaviour
             Enemyanimator.Play("Die");
 
             Destroy(gameObject, 3f);
-            if (!isdelay)
-            {
-                isdelay = true;
-                StartCoroutine(CountDeathDelay());
-                GameManager.instance.enemy_Death++;
-                Debug.Log("[DEC]Death / Death : " + GameManager.instance.enemy_Death);
-            }
+            Destroy(gameObject, 3f);
+            GameManager.instance.enemy_Death++;
+            GameManager.instance.score += 120;
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("[DEC]OnTriggerEnter / test");
+        Debug.Log("[SEC]OnTriggerEnter / test");
         if (other.tag == "Bullet")
         {
 
             health -= 35;
             //health -= p_status.defalt_Damage;
-            Debug.Log("[DEC]OnTriggerEnter / health : " + health);
+            Debug.Log("[SEC]OnTriggerEnter / health : " + health);
+            if (health <= 0 && isdelay == true)
+            {
+                Death();
+                isdelay = false;
+
+            }
         }
     }
     IEnumerator CountDeathDelay()

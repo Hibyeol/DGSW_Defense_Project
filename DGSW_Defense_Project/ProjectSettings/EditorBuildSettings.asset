@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene 1.unity
     guid: ca2db3b7ec44eb74baff7920c612dedb
+  - enabled: 1
+    path: Assets/YIm_daun/Scenes_Yim/Player.unity
+    guid: 6678358db4b3c814a8f7eecd48172f3c
   m_configObjects: {}

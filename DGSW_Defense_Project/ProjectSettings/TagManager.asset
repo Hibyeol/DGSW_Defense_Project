@@ -22,6 +22,9 @@ TagManager:
   - Reinforced_atk
   - Middle_Enemy
   - Middle_atk
+  - Map2
+  - Final_Enemy
+  - Final_atk
   layers:
   - Default
   - TransparentFX
