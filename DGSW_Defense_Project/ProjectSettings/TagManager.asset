@@ -25,6 +25,7 @@ TagManager:
   - Map2
   - Final_Enemy
   - Final_atk
+  - Heal
   layers:
   - Default
   - TransparentFX

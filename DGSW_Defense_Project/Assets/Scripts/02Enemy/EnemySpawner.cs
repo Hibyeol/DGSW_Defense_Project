@@ -82,7 +82,7 @@ public class EnemySpawner : MonoBehaviour
         {
             if (GameManager.instance.round == 10 && middleBossCount == 1)
             {
-                GameObject defalt = Instantiate(middle_EnemyPrefabs, spawnPoints[ranNumx]);//
+                GameObject middle = Instantiate(middle_EnemyPrefabs, spawnPoints[ranNumx]);//
                 middleBossCount++;
             }
             GameObject physical = Instantiate(round7[ranNumy], spawnPoints[ranNumx]);
@@ -102,19 +102,19 @@ public class EnemySpawner : MonoBehaviour
     {
         if (GameManager.instance.round > 10 && GameManager.instance.round <= 13)
         {
-            GameObject speed = Instantiate(round10[ranNumy], spawnPoints[ranNumx]);
+            GameObject speeed = Instantiate(round10[ranNumy], spawnPoints[ranNumx]);
             GameManager.instance.enemyCount++;
         }
         if (GameManager.instance.round > 13 && GameManager.instance.round <= 15)
         {
-            GameObject speed = Instantiate(round13[ranNumy], spawnPoints[ranNumx]);
+            GameObject reinforced = Instantiate(round13[ranNumy], spawnPoints[ranNumx]);
             GameManager.instance.enemyCount++;
         }
         if (GameManager.instance.round > 15 && GameManager.instance.round <= 20)
         {
             if (GameManager.instance.round == 20 && finalBossCount == 1)
             {
-                GameObject defalt = Instantiate(final_EnemyPrefabs, spawnPoints[ranNumx]);//
+                GameObject final = Instantiate(final_EnemyPrefabs, spawnPoints[ranNumx]);//
                 finalBossCount++;
             }
             GameObject speed = Instantiate(round16[ranNumy], spawnPoints[ranNumx]);

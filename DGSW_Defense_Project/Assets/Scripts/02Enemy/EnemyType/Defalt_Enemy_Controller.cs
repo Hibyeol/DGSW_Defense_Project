@@ -13,11 +13,12 @@ public class Defalt_Enemy_Controller : MonoBehaviour
 
     public Transform target; // 플레이어 추적
     public Transform point; // 포인트 추적 
-
+    public GameObject healingobj;
     private float speed; // 이동속도
     bool Move;
     bool isdelay;
     float health;
+
     Vector3 reactVec;
     //int atkStep;  // 공격 모션 단계  
 
@@ -149,6 +150,11 @@ public class Defalt_Enemy_Controller : MonoBehaviour
 
         Enemyanimator.Play("Die");
         Destroy(gameObject, 3f);
+        int h;
+        h = Random.Range(0, 9);
+        
+        Instantiate(healingobj, transform.position, Quaternion.identity);
+        
         GameManager.instance.enemy_Death++;
         GameManager.instance.score += 50;
         Debug.Log("[DEC]Death / Death : " + GameManager.instance.enemy_Death);

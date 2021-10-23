@@ -539,7 +539,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc7e9b0f116e90d468f961bf915eeb0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defalt_Health: 70
+  defalt_Health: 100
   defalt_Speed: 3
   defalt_Damage: 5
   defalt_AtcSpeed: 1

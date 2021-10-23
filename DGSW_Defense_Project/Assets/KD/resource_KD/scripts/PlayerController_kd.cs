@@ -26,6 +26,7 @@ public class PlayerController_kd : MonoBehaviour
 	Vector3 velocity;
 
 	private float cur_hp;// 현재 자신의 체력
+	private float max_hp;// 현재 자신의 체력
 
 	bool isGrounded;
 	bool isJumping;
@@ -44,6 +45,7 @@ public class PlayerController_kd : MonoBehaviour
 	bool isFireRate = false;
 	bool isReload = false;
 	bool isdeath = true;
+	bool isheal = true;
 
 	float timer = 0.0f;
 
@@ -231,6 +233,9 @@ public class PlayerController_kd : MonoBehaviour
 		p_status = FindObjectOfType<Player_Status>();
 		e_status = FindObjectOfType<Enemy_Status>();
 		cur_hp = p_status.defalt_Health;
+		Debug.Log("[PlayreController]OntriggerEnter/cur_hp : " + cur_hp);
+		max_hp = p_status.defalt_Health;
+		Debug.Log("[PlayreController]OntriggerEnter/max_hp : " + max_hp);
 
 	}
 
@@ -298,19 +303,57 @@ public class PlayerController_kd : MonoBehaviour
         {
 			if (other.tag == "Player")
 			{
-				Debug.Log("[PlayreController]OntriggerEnter/Heal : ");
-				Heal();
+				Debug.Log("[PlayreController]OntriggerEnter/Resurrection ");
+				Resurrection();
 			}
+		}
+		if (other.tag == "Heal"&&isheal == true)
+		{
+			Debug.Log("[PlayreController]OntriggerEnter/Healobj : ");
+			isheal = false;
+			StartCoroutine(Heal());
 
 		}
-
 	}
 
-	void Heal()
+ //   void Heal()
+ //   {
+	//	if (max_hp < cur_hp)
+	//	{
+	//		cur_hp = max_hp;
+	//		Debug.Log("[PlayreController]OntriggerEnter/Heal : " + cur_hp);
+	//	}
+	//	else
+	//	{
+	//		cur_hp += 30;
+	//		Debug.Log("[PlayreController]OntriggerEnter/Heal : " + cur_hp);
+	//	}
+	//	Instantiate(effectObj, transform.position, Quaternion.identity);
+	//}
+
+	void Resurrection()
     {
-		cur_hp = 100;
+		cur_hp = 30;
 		isdeath = false;
 		Instantiate(effectObj, transform.position, Quaternion.identity);
 	}
-	
+
+	IEnumerator Heal()
+    {
+		yield return new WaitForSeconds(1f);
+		if (max_hp < cur_hp)
+		{
+			cur_hp = max_hp;
+			Debug.Log("[PlayreController]OntriggerEnter/Heal : " + cur_hp);
+		}
+		else
+		{
+			cur_hp += 30;
+			Debug.Log("[PlayreController]OntriggerEnter/Heal : " + cur_hp);
+		}
+		isheal = true;
+		Instantiate(effectObj, transform.position, Quaternion.identity);
+	}
+
+
 }

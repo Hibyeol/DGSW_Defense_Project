@@ -190,7 +190,6 @@ public class Final_Enemy_Controller : MonoBehaviour
         Enemyanimator.Play("Die");
 
         Destroy(gameObject, 3f);
-        GameManager.instance.enemy_Death++;
         GameManager.instance.score += 2000;
         Debug.Log("[FEC]Death / Death : " + GameManager.instance.enemy_Death);
 
