@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1008111594844247095}
   - component: {fileID: 1372996241455804665}
   - component: {fileID: 4627000374582384910}
-  - component: {fileID: 1946490443736122783}
+  - component: {fileID: 3943619246663862546}
   m_Layer: 9
   m_Name: Middle_Enemy (1)
   m_TagString: Middle_Enemy
@@ -158,7 +158,7 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &1946490443736122783
+--- !u!114 &3943619246663862546
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -194,11 +194,11 @@ MonoBehaviour:
   reinforced_Speed: 3
   reinforced_Damage: 15
   reinforced_AtcSpeed: 1.3
-  middle_Health: 150
+  middle_Health: 1500
   middle_Speed: 3
   middle_Damage: 25
   middle_AtcSpeed: 1.3
-  final_Health: 250
+  final_Health: 2500
   final_Speed: 3
   final_Damage: 35
   final_AtcSpeed: 2

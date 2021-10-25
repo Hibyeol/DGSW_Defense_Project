@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class ClearManager : MonoBehaviour
 {
     public GameObject Clear;
+    public GameObject Return;
     public Text totalText;
     // Start is called before the first frame update
     void Start()

@@ -74,7 +74,7 @@ public class PlayerController_kd : MonoBehaviour
 
 	void Update()
 	{
-		if (isdeath)
+		if (isdeath && GameManager.instance.isPmove)
 		{
 			// 플레이어 입력
 			h = Input.GetAxis("Horizontal");

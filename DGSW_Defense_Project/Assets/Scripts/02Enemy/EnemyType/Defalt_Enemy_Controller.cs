@@ -16,6 +16,7 @@ public class Defalt_Enemy_Controller : MonoBehaviour
     public GameObject healingobj;
     private float speed; // 이동속도
     bool Move;
+
     bool isdelay;
     float health;
 
@@ -151,9 +152,11 @@ public class Defalt_Enemy_Controller : MonoBehaviour
         Enemyanimator.Play("Die");
         Destroy(gameObject, 3f);
         int h;
-        h = Random.Range(0, 9);
-        
-        Instantiate(healingobj, transform.position, Quaternion.identity);
+        h = (int)Random.Range(0, 9);
+        //if (h == 1)
+        //{
+            Instantiate(healingobj, new Vector3(transform.position.x, transform.position.y + 1.5f, transform.position.z), Quaternion.identity);
+        //}
         
         GameManager.instance.enemy_Death++;
         GameManager.instance.score += 50;

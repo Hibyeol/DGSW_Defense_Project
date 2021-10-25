@@ -186,9 +186,7 @@ public class Middle_Enemy_Controller : MonoBehaviour
         Enemyanimator.Play("Die");
    
         Destroy(gameObject, 3f);
-        GameManager.instance.enemy_Death++;
         GameManager.instance.score += 750;
-        Debug.Log("[MEC]Death / Death : " + GameManager.instance.enemy_Death);
 
     }
 

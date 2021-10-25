@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     public int[] round_enemy = new int[] { 0, 1, 1, 1, 1, 1, 7, 8, 9, 10, 11, 12, 13, 14 };
     public bool nextMap;
     public bool nextRound;
+    public bool isPmove;
     //public bool gameClear = false;
 
     public GameObject spawn1;
@@ -25,6 +26,7 @@ public class GameManager : MonoBehaviour
     public GameObject point2;
     public GameObject playing;
     public GameObject clear;
+    public GameObject esc;
 
     public float totalTime;
     public int score;
@@ -41,6 +43,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Cursor.visible = false;
         sec = 0;
         min = 0;
         round = 1;
@@ -53,6 +56,8 @@ public class GameManager : MonoBehaviour
         playing.SetActive(true);
         nextRound = false;
         clear.SetActive(false);
+        isPmove = true;
+        //esc.SetActive(false);
     }
 
     // Update is called once per frame
@@ -65,6 +70,17 @@ public class GameManager : MonoBehaviour
         }
         Score();
         SpawnRound();
+        Esc();
+        if (!isPmove)
+        {
+            Cursor.visible = true;
+            esc.SetActive(true);
+        }
+        if (isPmove)
+        {
+            Cursor.visible = false;
+            esc.SetActive(false);
+        }
     }
 
     void TimeSet()
@@ -121,6 +137,13 @@ public class GameManager : MonoBehaviour
         else
         {
             nextRound = false;
+        }
+    }
+    void Esc()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            isPmove = !isPmove;
         }
     }
 

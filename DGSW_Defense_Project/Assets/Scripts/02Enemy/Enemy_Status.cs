@@ -35,12 +35,12 @@ public class Enemy_Status : MonoBehaviour
     public float reinforced_Damage = 15;
     public float reinforced_AtcSpeed = 1.3f;
 
-    public float middle_Health = 150f;
+    public float middle_Health = 1500f;
     public float middle_Speed = 3f;
     public float middle_Damage = 25f;
     public float middle_AtcSpeed = 1.3f;
 
-    public float final_Health = 250f;
+    public float final_Health = 2500f;
     public float final_Speed = 3f;
     public float final_Damage = 35f;
     public float final_AtcSpeed = 2f;
