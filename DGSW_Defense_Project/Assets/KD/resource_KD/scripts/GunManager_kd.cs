@@ -6,6 +6,7 @@ public class GunManager_kd : MonoBehaviour
 {
 
     public GameObject bullet;
+    public GameObject bulletEffect;
     float bulletSpeed = 10.0f;
 
     public GunBlueprint_kd gunBlueprint_kd;
@@ -43,7 +44,8 @@ public class GunManager_kd : MonoBehaviour
         animator.SetBool("Shoot_b", ifClick);
         Debug.Log(firePoint.transform.position);
         if(ifClick && !ifFireRate){
-            GameObject b = Instantiate(bullet, firePoint.transform.position,Quaternion.identity);
+            GameObject b = Instantiate(bullet, firePoint.transform.position,Quaternion.identity); // bullet
+            GameObject bE = Instantiate(bulletEffect,firePoint.transform.position, Quaternion.identity);//bulletEffect
             b.GetComponent<Rigidbody>().AddForce(b.transform.forward * bulletSpeed);
 
             magazine--;

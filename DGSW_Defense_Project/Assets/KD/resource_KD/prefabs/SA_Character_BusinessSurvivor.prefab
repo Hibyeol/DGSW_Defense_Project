@@ -1111,8 +1111,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   animator: {fileID: 0}
-  bullet: {fileID: 0}
-  bulletSpeed: 100
   gunBlueprint:
     gunName: 
     gunType: 0
@@ -1120,8 +1118,12 @@ MonoBehaviour:
     damage: 0
     fireRate: 0
     fireRange: 0
+    reloadTime: 0
+    bullet: {fileID: 0}
+    bulletSpeed: 0
   firePoint: {fileID: 0}
   aim: {fileID: 0}
+  effectObj: {fileID: 0}
 --- !u!114 &6365093046904495017
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1135,13 +1137,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bullet: {fileID: 1859491773422373066, guid: aae4abbbffba93c4eb3fa96f6dbb32df, type: 3}
-  gunBlueprint:
-    gunName: AssaultRifle02
-    gunType: 2
-    magazine: 30
-    damage: 10
-    fireRate: 0.2
-    fireRange: 20
+  bulletEffect: {fileID: 1670457245891842, guid: acad5363ee599db48a2fc0aecd98bc29,
+    type: 3}
+  gunBlueprint_kd:
+    gunName: 
+    gunType: 0
+    magazine: 0
+    damage: 0
+    fireRate: 0
+    fireRange: 0
+    reloadTime: 0
+    bullet: {fileID: 0}
+    bulletSpeed: 0
   firePoint: {fileID: 6365093046856799299}
   aim: {fileID: 4804229875453727685}
 --- !u!114 &5009942542299106928

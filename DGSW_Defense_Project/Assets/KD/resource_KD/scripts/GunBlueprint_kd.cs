@@ -13,6 +13,7 @@ public class GunBlueprint_kd
     public float fireRange;
     public float reloadTime;
     public GameObject bullet;
+    public GameObject bulletEffect;
     public float bulletSpeed;
     /*
     장전시간은 플레이어 애니메이터의 WeaponType_int(guntype)에

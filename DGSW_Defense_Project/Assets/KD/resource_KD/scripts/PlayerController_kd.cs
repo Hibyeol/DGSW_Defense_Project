@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class PlayerController_kd : MonoBehaviour
 {
-	Player_Status p_status;
-	Enemy_Status e_status;
+	
+	public Enemy_Status1 e_status;
+	public string playerType;
 
+	public Player_Status p_status;
 	public PlayerBlueprint_kd playerBlueprint;
-
 	public CharacterController player;
 
 	float h;
@@ -36,9 +37,11 @@ public class PlayerController_kd : MonoBehaviour
 	public Animator animator;
 
 	private GameObject bullet;
+	private GameObject bulletEffect;
 
 	public GunBlueprint_kd gunBlueprint;
 	public GameObject firePoint;
+
 	public Transform aim;
 
 	bool isClick = false;
@@ -139,6 +142,7 @@ public class PlayerController_kd : MonoBehaviour
 			if (isClick && !isFireRate && !isReload)
 			{
 				bullet = Instantiate(gunBlueprint.bullet, firePoint.transform.position, firePoint.transform.rotation);
+				bulletEffect = Instantiate(gunBlueprint.bulletEffect, firePoint.transform.position, firePoint.transform.rotation);//bulletEffect
 				bullet.GetComponent<Rigidbody>().AddForce(bullet.transform.forward * gunBlueprint.bulletSpeed);
 				Destroy(bullet, 2.0f);
 
@@ -230,11 +234,35 @@ public class PlayerController_kd : MonoBehaviour
 		animator = GetComponentInChildren<Animator>();
 		animator.SetInteger("WeaponType_int", gunBlueprint.gunType);
         magazine = gunBlueprint.magazine;
-		p_status = FindObjectOfType<Player_Status>();
-		e_status = FindObjectOfType<Enemy_Status>();
-		cur_hp = p_status.defalt_Health;
+		//p_status = FindObjectOfType<Player_Status>();
+		//e_status = FindObjectOfType<Enemy_Status>();
+		Debug.Log("[PlayreController]Setup/ playerType" + playerType);
+
+        if (playerType == "Player1")
+        {
+			cur_hp = PlayerHpManager.instance.player1_cur_Hp;
+			max_hp = PlayerHpManager.instance.player1_max_Hp;
+        }
+		if (playerType == "Player2")
+		{
+			cur_hp = PlayerHpManager.instance.player2_cur_Hp;
+			max_hp = PlayerHpManager.instance.player2_max_Hp;
+		}
+		if (playerType == "Player3")
+		{
+			cur_hp = PlayerHpManager.instance.player3_cur_Hp;
+			max_hp = PlayerHpManager.instance.player3_max_Hp;
+		}
+		if (playerType == "Player4")
+		{
+			cur_hp = PlayerHpManager.instance.player4_cur_Hp;
+			max_hp = PlayerHpManager.instance.player4_max_Hp;
+		}
+
+
+		//cur_hp = playerHpManager.player1_;
 		Debug.Log("[PlayreController]OntriggerEnter/cur_hp : " + cur_hp);
-		max_hp = p_status.defalt_Health;
+		//max_hp = p_status.defalt_Health;
 		Debug.Log("[PlayreController]OntriggerEnter/max_hp : " + max_hp);
 
 	}
@@ -247,24 +275,51 @@ public class PlayerController_kd : MonoBehaviour
 
 	void OnTriggerEnter(Collider other)
 	{
-		//Debug.Log("[PlayreController]OntriggerEnter");
-		//Debug.Log("[PlayreController]OnTriggerEnter/other : " + other);
+        //Debug.Log("[PlayreController]OntriggerEnter");
+        //Debug.Log("[PlayreController]OnTriggerEnter/other : " + other);
 
+        
+
+        if (other.tag== "Map2")
+        {
+			Debug.Log("[PlayreController]OntriggerEnter/nextMap : " + GameManager.instance.nextMap);
+			GameManager.instance.nextMap = true;
+        }
+        if (cur_hp < 0)
+        {
+			if (other.tag == "Player")
+			{
+				Debug.Log("[PlayreController]OntriggerEnter/Resurrection : ");
+				Resurrection();
+			}
+		}
+		if (other.tag == "Heal"&&isheal == true)
+		{
+			Debug.Log("[PlayreController]OntriggerEnter/Healobj : ");
+			isheal = false;
+			StartCoroutine(Heal());
+
+		}
+	}
+
+    private void OnTriggerExit(Collider other)
+    {
 		if (other.tag == "Enemy_atk")// 기본형
 		{
 
-			Debug.Log("[PlayreController]OntriggerEnter/e.status.defalt_Damage : " + e_status.defalt_Damage);
+			Debug.Log("[PlayreController]OntriggerEnter_e.status." + e_status.enemyType1 + "_Damage : " + e_status.defalt_Damage);
 			cur_hp -= e_status.defalt_Damage;
 
-			Debug.Log("Enemy_atk : " + cur_hp);
+			Debug.Log(playerType + "_cur_hp : " + cur_hp);
 		}
 
 		if (other.tag == "Aerial_atk")// 공중형
 		{
-			Debug.Log("[PlayreController]OntriggerEnter/e.status.aerial_Damage : " + e_status.aerial_Damage);
+
+			Debug.Log("[PlayreController]OntriggerEnter_e.status." + e_status.enemyType1 + "_Damage : " + e_status.aerial_Damage);
 			cur_hp -= e_status.aerial_Damage;
 
-			Debug.Log("Aerial_atk : " + cur_hp);
+			Debug.Log(playerType + "_cur_hp : " + cur_hp);
 		}
 		if (other.tag == "Speed_atk")// 속도형
 		{
@@ -294,44 +349,32 @@ public class PlayerController_kd : MonoBehaviour
 
 			Debug.Log("Middle_atk : " + cur_hp);
 		}
-		if (other.tag== "Map2")
-        {
-			Debug.Log("[PlayreController]OntriggerEnter/nextMap : " + GameManager.instance.nextMap);
-			GameManager.instance.nextMap = true;
-        }
-        if (cur_hp < 0)
-        {
-			if (other.tag == "Player")
-			{
-				Debug.Log("[PlayreController]OntriggerEnter/Resurrection ");
-				Resurrection();
-			}
-		}
-		if (other.tag == "Heal"&&isheal == true)
-		{
-			Debug.Log("[PlayreController]OntriggerEnter/Healobj : ");
-			isheal = false;
-			StartCoroutine(Heal());
 
+		if (other.tag == "Final_atk")
+		{
+			Debug.Log("[PlayreController]OntriggerEnter/e.status.final_Damage : " + e_status.final_Damage);
+			cur_hp -= e_status.final_Damage;
+
+			Debug.Log("Final_atk : " + cur_hp);
 		}
 	}
 
- //   void Heal()
- //   {
-	//	if (max_hp < cur_hp)
-	//	{
-	//		cur_hp = max_hp;
-	//		Debug.Log("[PlayreController]OntriggerEnter/Heal : " + cur_hp);
-	//	}
-	//	else
-	//	{
-	//		cur_hp += 30;
-	//		Debug.Log("[PlayreController]OntriggerEnter/Heal : " + cur_hp);
-	//	}
-	//	Instantiate(effectObj, transform.position, Quaternion.identity);
-	//}
+    //   void Heal()
+    //   {
+    //	if (max_hp < cur_hp)
+    //	{
+    //		cur_hp = max_hp;
+    //		Debug.Log("[PlayreController]OntriggerEnter/Heal : " + cur_hp);
+    //	}
+    //	else
+    //	{
+    //		cur_hp += 30;
+    //		Debug.Log("[PlayreController]OntriggerEnter/Heal : " + cur_hp);
+    //	}
+    //	Instantiate(effectObj, transform.position, Quaternion.identity);
+    //}
 
-	void Resurrection()
+    void Resurrection()
     {
 		cur_hp = 30;
 		isdeath = false;
@@ -352,7 +395,8 @@ public class PlayerController_kd : MonoBehaviour
 			Debug.Log("[PlayreController]OntriggerEnter/Heal : " + cur_hp);
 		}
 		isheal = true;
-		Instantiate(effectObj, transform.position, Quaternion.identity);
+		GameObject healobj = Instantiate(effectObj, transform.position, effectObj.transform.rotation);
+		Destroy(healobj, 3f);
 	}
 
 

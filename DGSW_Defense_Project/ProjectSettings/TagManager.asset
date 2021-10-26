@@ -26,6 +26,10 @@ TagManager:
   - Final_Enemy
   - Final_atk
   - Heal
+  - Player1_HitBox
+  - Player2_HitBox
+  - Player3_HitBox
+  - Player4_HitBox
   layers:
   - Default
   - TransparentFX
