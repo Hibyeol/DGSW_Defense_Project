@@ -1064,7 +1064,6 @@ GameObject:
   - component: {fileID: 7813325605160157872}
   - component: {fileID: 498090008781915266}
   - component: {fileID: 2399513109125156268}
-  - component: {fileID: 2586294833449583762}
   m_Layer: 0
   m_Name: Aerial_Enemy (1)
   m_TagString: Aerial_Enemy
@@ -1190,8 +1189,11 @@ MonoBehaviour:
     final_Damage: 35
     final_AtcSpeed: 2
     enemyType8: final
+  players: []
   target: {fileID: 0}
   point: {fileID: 0}
+  healingobj: {fileID: 7259063066203188474, guid: 77d1c90cf16152a4f80037d488959541,
+    type: 3}
 --- !u!54 &498090008781915266
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1230,61 +1232,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &2586294833449583762
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2751256628652435635}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eba2b6b7b00e5bc4c9771bbeb1f6cc61, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  e_status:
-    defalt_Health: 70
-    defalt_Speed: 3
-    defalt_Damage: 5
-    defalt_AtcSpeed: 1
-    enemyType1: defalt
-    aerial_Health: 50
-    aerial_Speed: 3
-    aerial_Damage: 15
-    aerial_AtcSpeed: 1
-    enemyType2: aerial
-    physical_Health: 120
-    physical_Speed: 3
-    physical_Damage: 5
-    physical_AtcSpeed: 1
-    enemyType3: physical
-    speed_Health: 60
-    speed_Speed: 6
-    speed_Damage: 5
-    speed_AtcSpeed: 1.5
-    enemyType4: speed
-    explosion_Health: 50
-    explosion_Speed: 1
-    explosion_Damage: 50
-    explosion_AtcSpeed: 1
-    enemyType5: explosion
-    reinforced_Health: 100
-    reinforced_Speed: 3
-    reinforced_Damage: 15
-    reinforced_AtcSpeed: 1.3
-    enemyType6: reinforced
-    middle_Health: 1500
-    middle_Speed: 3
-    middle_Damage: 25
-    middle_AtcSpeed: 1.3
-    enemyType7: middle
-    final_Health: 2500
-    final_Speed: 3
-    final_Damage: 35
-    final_AtcSpeed: 2
-    enemyType8: final
-  target: {fileID: 0}
-  point: {fileID: 0}
 --- !u!1 &2751259853569280909
 GameObject:
   m_ObjectHideFlags: 0

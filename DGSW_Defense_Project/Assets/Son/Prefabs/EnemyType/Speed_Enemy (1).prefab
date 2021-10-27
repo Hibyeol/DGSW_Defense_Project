@@ -332,8 +332,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91747c595711b8a4ab8108503f261ff8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: []
   target: {fileID: 0}
   point: {fileID: 0}
+  healingobj: {fileID: 7259063066203188474, guid: 77d1c90cf16152a4f80037d488959541,
+    type: 3}
 --- !u!195 &-7151471927625713702
 NavMeshAgent:
   m_ObjectHideFlags: 0

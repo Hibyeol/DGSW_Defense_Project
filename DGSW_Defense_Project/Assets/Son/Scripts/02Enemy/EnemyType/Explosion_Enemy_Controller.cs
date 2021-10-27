@@ -6,14 +6,16 @@ using UnityEngine.AI;
 public class Explosion_Enemy_Controller : MonoBehaviour
 {
     Animator Enemyanimator; // 애니메이터 
-    Enemy_Status1 e_status; // Enenmy 상태
-    Player_Status p_status;
-    NavMeshAgent nav;
-    Rigidbody rigid;
+    public GameObject[] players;
 
-    //public GameObject particle;
-    public Transform target; // 플레이어 추적
+    Rigidbody rigid;
+    NavMeshAgent nav;
+
+    public Transform target; // 추적 대상
     public Transform point; // 포인트 추적 
+
+
+    Enemy_Status1 e_status; // Enenmy 상태
 
 
     private float speed; // 이동속도
@@ -38,7 +40,8 @@ public class Explosion_Enemy_Controller : MonoBehaviour
        
         health = e_status.explosion_Health;
         Move = true;
-        target = GameObject.FindWithTag("Player").transform;
+        //target = GameObject.FindWithTag("Player").transform;
+        players = GameObject.FindGameObjectsWithTag("Player");
         point = GameObject.FindWithTag("Defanse_Point").transform;
         isdelay = true;
 
@@ -94,9 +97,35 @@ public class Explosion_Enemy_Controller : MonoBehaviour
             }
         }
     }
+
+    void Target()
+    {
+        Transform near_p = null;
+
+        //target = players[Random.Range(0, players.Length)].transform;
+        foreach (GameObject p in players)
+        {
+            if (Vector3.Distance(transform.position, p.transform.position) <= 10f)
+            {
+                if (!near_p || Vector3.Distance(p.transform.position, transform.position) < Vector3.Distance(near_p.position, transform.position))
+                {
+                    near_p = p.transform;
+
+                }
+
+            }
+            else
+            {
+                near_p = point.transform;
+            }
+
+        }
+        target = near_p;
+    }
     // Update is called once per frame
     void Update()
     {
+        Target();
         if (Move)
         {
             //RotateEnemy();

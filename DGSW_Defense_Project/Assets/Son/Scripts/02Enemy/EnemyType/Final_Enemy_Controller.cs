@@ -6,16 +6,20 @@ using UnityEngine.AI;
 public class Final_Enemy_Controller : MonoBehaviour
 {
     Animator Enemyanimator; // 애니메이터 
-    Enemy_Status1 e_status; // Enenmy 상태
-    //Player_Status p_status;
-    PlayerHpManager playerHpManager;
+    public Enemy_Status1 e_status; // Enenmy 상태
+
+
+    public GameObject[] players;
+
     NavMeshAgent nav;
     Rigidbody rigid;
 
-    public Transform target; // 플레이어 추적
-    public Transform point; // 포인트 추적 
+    public Transform target; // 추적 대상
+    public Transform point; // 포인트 추적
 
-    private float speed; // 이동속도
+    PlayerHpManager playerHpManager;
+    
+    
     bool Move;
     bool isdelay;
     float health;
@@ -35,7 +39,8 @@ public class Final_Enemy_Controller : MonoBehaviour
     {
         health = e_status.final_Health;
         Move = true;
-        target = GameObject.FindWithTag("Player").transform;
+        //target = GameObject.FindWithTag("Player").transform;
+        players = GameObject.FindGameObjectsWithTag("Player");
         point = GameObject.FindWithTag("Defanse_Point").transform;
         isdelay = true;
 
@@ -90,9 +95,37 @@ public class Final_Enemy_Controller : MonoBehaviour
             }
         }
     }
+
+    void Target()
+    {
+        Transform near_p = null;
+
+        //target = players[Random.Range(0, players.Length)].transform;
+        foreach (GameObject p in players)
+        {
+            if (Vector3.Distance(transform.position, p.transform.position) <= 10f)
+            {
+                if (!near_p || Vector3.Distance(p.transform.position, transform.position) < Vector3.Distance(near_p.position, transform.position))
+                {
+                    near_p = p.transform;
+
+                }
+
+            }
+            else
+            {
+                near_p = point.transform;
+            }
+
+        }
+        target = near_p;
+
+    }
+
     // Update is called once per frame
     void Update()
     {
+        Target();
         if (Move)
         {
             //RotateEnemy();

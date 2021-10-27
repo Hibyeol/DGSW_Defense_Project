@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -8,15 +7,18 @@ public class Defalt_Enemy_Controller : MonoBehaviour
     Animator Enemyanimator; // 애니메이터 
  
     PlayerHpManager playerHpManager;
+
+    public GameObject[] players;
+
+    public Enemy_Status1 enemy_Status;
+
     NavMeshAgent nav;
     Rigidbody rigid;
 
-
-    public Enemy_Status1 enemy_Status;
     public Transform target; // 플레이어 추적
     public Transform point; // 포인트 추적 
     public GameObject healingobj;
-    private float speed; // 이동속도
+    
     bool Move;
 
     bool isdelay;
@@ -40,7 +42,7 @@ public class Defalt_Enemy_Controller : MonoBehaviour
         //p_status = FindObjectOfType<Player_Status>();
         health = enemy_Status.defalt_Health;
         Move = true;
-        target = GameObject.FindWithTag("Player").transform;
+        players = GameObject.FindGameObjectsWithTag("Player");
         point = GameObject.FindWithTag("Defanse_Point").transform;
         isdelay = true;
 
@@ -66,6 +68,15 @@ public class Defalt_Enemy_Controller : MonoBehaviour
 
     void EnemyMove()
     {
+        //if (target)
+        //{
+        //    Enemyanimator.SetBool("Forward", true);
+        //    nav.SetDestination(target.position);
+        //    if ((target.position - transform.position).magnitude < 3)
+        //    {
+        //        Enemyanimator.SetBool("Forward", false);
+        //    }
+        //}
         if ((target.position - transform.position).magnitude < (point.position - transform.position).magnitude)
         {
             if ((target.position - transform.position).magnitude >= 3)
@@ -95,11 +106,42 @@ public class Defalt_Enemy_Controller : MonoBehaviour
             }
         }
     }
+
+    void Target()
+    {
+        Transform near_p  = null;
+
+        //target = players[Random.Range(0, players.Length)].transform;
+        foreach (GameObject p in players)
+        {
+            if (Vector3.Distance(transform.position, p.transform.position) <= 10f)
+            {
+                if (!near_p || Vector3.Distance(p.transform.position, transform.position)< Vector3.Distance(near_p.position, transform.position))
+                {
+                    near_p = p.transform;
+
+                }
+                
+            }
+            else
+            {
+                near_p = point.transform;
+            }
+          
+        }
+        target = near_p;
+
+        //Debug.Log("[DEC]Target / target 추적" + target.name);
+        //Debug.Log("[DEC]Target / Distance : " + Vector3.Distance(transform.position, near_p.position));
+        //target = GameObject.FindWithTag("Player").transform; // 1인모드 시 필요
+    }
     // Update is called once per frame
     void Update()
     {
+        Target();
         if (Move)
         {
+            Debug.Log("[DEC]Target / target 추적" + target.name);
             //RotateEnemy();
             EnemyMove();
         }
@@ -155,10 +197,10 @@ public class Defalt_Enemy_Controller : MonoBehaviour
         Destroy(gameObject, 3f);
         int h;
         h = (int)Random.Range(0, 9);
-        //if (h == 1)
-        //{
+        if (h == 1)
+        {
             Instantiate(healingobj, new Vector3(transform.position.x, transform.position.y + 1.5f, transform.position.z), Quaternion.identity);
-        //}
+        }
         
         GameManager.instance.enemy_Death++;
         GameManager.instance.score += 50;

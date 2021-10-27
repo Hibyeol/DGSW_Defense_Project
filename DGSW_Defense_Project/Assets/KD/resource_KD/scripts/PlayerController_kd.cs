@@ -136,6 +136,7 @@ public class PlayerController_kd : MonoBehaviour
 			// 캐릭터의 공격 애니메이션 설정
 			animator.SetBool("Shoot_b", isClick);
 
+			
 
 			isClick = Input.GetButton("Fire1");
 			// 캐릭터 공격
@@ -181,18 +182,12 @@ public class PlayerController_kd : MonoBehaviour
 			isdeath = false;
 			animator.SetBool("Death_b", true);
 		}
+		//animator.SetBool("Death", isdeath);
 	}
 
 	
 
-	void Death()
-	{
-		if (cur_hp <= 0)
-		{
-			isdeath = false;
-			animator.SetBool("Death_b", true);
-		}
-	}
+
 
 	//void Fire()
 	//{
@@ -282,20 +277,21 @@ public class PlayerController_kd : MonoBehaviour
 
         if (other.tag== "Map2")
         {
-			Debug.Log("[PlayreController]OntriggerEnter/nextMap : " + GameManager.instance.nextMap);
+			Debug.Log("[PlayreController]" + playerType + "_OntriggerEnter/nextMap : " + GameManager.instance.nextMap);
 			GameManager.instance.nextMap = true;
+			GameManager.instance.flare.SetActive(false);
         }
         if (cur_hp < 0)
         {
 			if (other.tag == "Player")
 			{
-				Debug.Log("[PlayreController]OntriggerEnter/Resurrection : ");
+				Debug.Log("[PlayreController]" + playerType + "_OntriggerEnter/Resurrection : ");
 				Resurrection();
 			}
 		}
 		if (other.tag == "Heal"&&isheal == true)
 		{
-			Debug.Log("[PlayreController]OntriggerEnter/Healobj : ");
+			Debug.Log("[PlayreController]"+playerType+"_OntriggerEnter/Healobj : ");
 			isheal = false;
 			StartCoroutine(Heal());
 
@@ -307,7 +303,7 @@ public class PlayerController_kd : MonoBehaviour
 		if (other.tag == "Enemy_atk")// 기본형
 		{
 
-			Debug.Log("[PlayreController]OntriggerEnter_e.status." + e_status.enemyType1 + "_Damage : " + e_status.defalt_Damage);
+			Debug.Log("[PlayreController]" + playerType + "_OntriggerEnter_e.status." + e_status.enemyType1 + "_Damage : " + e_status.defalt_Damage);
 			cur_hp -= e_status.defalt_Damage;
 
 			Debug.Log(playerType + "_cur_hp : " + cur_hp);
@@ -316,35 +312,35 @@ public class PlayerController_kd : MonoBehaviour
 		if (other.tag == "Aerial_atk")// 공중형
 		{
 
-			Debug.Log("[PlayreController]OntriggerEnter_e.status." + e_status.enemyType1 + "_Damage : " + e_status.aerial_Damage);
+			Debug.Log("[PlayreController]" + playerType + "_OntriggerEnter_e.status." + e_status.enemyType1 + "_Damage : " + e_status.aerial_Damage);
 			cur_hp -= e_status.aerial_Damage;
 
 			Debug.Log(playerType + "_cur_hp : " + cur_hp);
 		}
 		if (other.tag == "Speed_atk")// 속도형
 		{
-			Debug.Log("[PlayreController]OntriggerEnter/e.status.speed_Damage : " + e_status.speed_Damage);
+			Debug.Log("[PlayreController]" + playerType + "_OntriggerEnter/e.status.speed_Damage : " + e_status.speed_Damage);
 			cur_hp -= e_status.speed_Damage;
 
 			Debug.Log("Speed_atk : " + cur_hp);
 		}
 		if (other.tag == "Physical_atk") // 체력형
 		{
-			Debug.Log("[PlayreController]OntriggerEnter/e.status.physical_Damage : " + e_status.physical_Damage);
+			Debug.Log("[PlayreController]" + playerType + "_OntriggerEnter/e.status.physical_Damage : " + e_status.physical_Damage);
 			cur_hp -= e_status.physical_Damage;
 
 			Debug.Log("physical_Damage : " + cur_hp);
 		}
 		if (other.tag == "Reinforced_atk") // 강화형
 		{
-			Debug.Log("[PlayreController]OntriggerEnter/e.status.reinforced_Damage : " + e_status.reinforced_Damage);
+			Debug.Log("[PlayreController]" + playerType + "_OntriggerEnter/e.status.reinforced_Damage : " + e_status.reinforced_Damage);
 			cur_hp -= e_status.reinforced_Damage;
 
 			Debug.Log("Reinforced_atk : " + cur_hp);
 		}
 		if (other.tag == "Middle_atk") // 중간보스
 		{
-			Debug.Log("[PlayreController]OntriggerEnter/e.status.middle_Damage : " + e_status.middle_Damage);
+			Debug.Log("[PlayreController]" + playerType + "_OntriggerEnter/e.status.middle_Damage : " + e_status.middle_Damage);
 			cur_hp -= e_status.middle_Damage;
 
 			Debug.Log("Middle_atk : " + cur_hp);
@@ -352,7 +348,7 @@ public class PlayerController_kd : MonoBehaviour
 
 		if (other.tag == "Final_atk")
 		{
-			Debug.Log("[PlayreController]OntriggerEnter/e.status.final_Damage : " + e_status.final_Damage);
+			Debug.Log("[PlayreController]" + playerType + "_OntriggerEnter/e.status.final_Damage : " + e_status.final_Damage);
 			cur_hp -= e_status.final_Damage;
 
 			Debug.Log("Final_atk : " + cur_hp);
@@ -377,8 +373,14 @@ public class PlayerController_kd : MonoBehaviour
     void Resurrection()
     {
 		cur_hp = 30;
-		isdeath = false;
-		Instantiate(effectObj, transform.position, Quaternion.identity);
+		Debug.Log("[PlayreController]" + playerType + "Resurrection : " + cur_hp);
+		isdeath = true;
+		animator.SetBool("Death_b", false);
+		gameObject.SetActive(false);
+		gameObject.SetActive(true);
+		GameObject healobj = Instantiate(effectObj, transform.position, effectObj.transform.rotation);
+		Destroy(healobj, 1f);
+
 	}
 
 	IEnumerator Heal()
@@ -387,16 +389,16 @@ public class PlayerController_kd : MonoBehaviour
 		if (max_hp < cur_hp)
 		{
 			cur_hp = max_hp;
-			Debug.Log("[PlayreController]OntriggerEnter/Heal : " + cur_hp);
+			Debug.Log("[PlayreController]" + playerType + "_OntriggerEnter/Heal : " + cur_hp);
 		}
 		else
 		{
 			cur_hp += 30;
-			Debug.Log("[PlayreController]OntriggerEnter/Heal : " + cur_hp);
+			Debug.Log("[PlayreController]" + playerType + "_OntriggerEnter/Heal : " + cur_hp);
 		}
 		isheal = true;
 		GameObject healobj = Instantiate(effectObj, transform.position, effectObj.transform.rotation);
-		Destroy(healobj, 3f);
+		Destroy(healobj,1f);
 	}
 
 

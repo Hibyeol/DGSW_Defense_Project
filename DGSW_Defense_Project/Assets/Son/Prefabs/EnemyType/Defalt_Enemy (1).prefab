@@ -1521,6 +1521,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67aba648259a3fe4c80f540f8327ae4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   enemy_Status:
     defalt_Health: 70
     defalt_Speed: 3

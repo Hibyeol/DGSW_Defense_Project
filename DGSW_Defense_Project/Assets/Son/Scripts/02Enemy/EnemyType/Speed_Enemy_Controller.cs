@@ -6,14 +6,17 @@ using UnityEngine.AI;
 public class Speed_Enemy_Controller: MonoBehaviour
 {
     Animator Enemyanimator; // 애니메이터 
-    Enemy_Status1 e_status; // Enenmy 상태
+    public Enemy_Status1 e_status; // Enenmy 상태
+
+    public GameObject[] players;
+
     Rigidbody rigid;
     NavMeshAgent nav;
 
     public Transform target; // 추적 대상
-    public Transform point; // 포인트 추적
-    
-    private float speed; // 이동속도
+    public Transform point; // 포인트 추적 
+
+    public GameObject healingobj;
 
     bool Move;
     bool isdelay;
@@ -33,7 +36,8 @@ public class Speed_Enemy_Controller: MonoBehaviour
     {
         Move = true;
         health = e_status.speed_Health;
-        target = GameObject.FindWithTag("Player").transform; // 추적 대상 위치
+        //target = GameObject.FindWithTag("Player").transform; // 추적 대상 위치
+        players = GameObject.FindGameObjectsWithTag("Player");
         point = GameObject.FindWithTag("Defanse_Point").transform; // 추적 대상 위치
         isdelay = true;
     }
@@ -62,14 +66,14 @@ public class Speed_Enemy_Controller: MonoBehaviour
         {
             if ((target.position - transform.position).magnitude >= 3)
             {
-                Enemyanimator.SetBool("Move Forward Slow", true);
+                Enemyanimator.SetBool("Move Forward Fast", true);
                 nav.SetDestination(target.position);
                 //transform.Translate(Vector3.forward * e_status.speed_Speed * Time.deltaTime, Space.Self);
             }
 
             if ((target.position - transform.position).magnitude < 3)
             {
-                Enemyanimator.SetBool("Move Forward Slow", false);
+                Enemyanimator.SetBool("Move Forward Fast", false);
             }
         }
 
@@ -77,20 +81,46 @@ public class Speed_Enemy_Controller: MonoBehaviour
         {
             if ((point.position - transform.position).magnitude >= 3)
             {
-                Enemyanimator.SetBool("Move Forward Slow", true);
+                Enemyanimator.SetBool("Move Forward Fast", true);
                 nav.SetDestination(point.position);
                 //transform.Translate(Vector3.forward * e_status.speed_Speed * Time.deltaTime, Space.Self);
             }
 
             if ((point.position - transform.position).magnitude < 3)
             {
-                Enemyanimator.SetBool("Move Forward Slow", false);
+                Enemyanimator.SetBool("Move Forward Fast", false);
             }
         }
     }
+    void Target()
+    {
+        Transform near_p = null;
+
+        //target = players[Random.Range(0, players.Length)].transform;
+        foreach (GameObject p in players)
+        {
+            if (Vector3.Distance(transform.position, p.transform.position) <= 10f)
+            {
+                if (!near_p || Vector3.Distance(p.transform.position, transform.position) < Vector3.Distance(near_p.position, transform.position))
+                {
+                    near_p = p.transform;
+
+                }
+
+            }
+            else
+            {
+                near_p = point.transform;
+            }
+
+        }
+        target = near_p;
+    }
+
     // Update is called once per frame
     void Update()
     {
+        Target();
         if (Move)
         {
             //RotateEnemy();
@@ -170,6 +200,12 @@ public class Speed_Enemy_Controller: MonoBehaviour
 
             Destroy(gameObject, 3f);
             Destroy(gameObject, 3f);
+            int h;
+            h = (int)Random.Range(0, 9);
+            if (h == 1)
+            {
+                Instantiate(healingobj, new Vector3(transform.position.x, transform.position.y + 1.5f, transform.position.z), Quaternion.identity);
+            }
             GameManager.instance.enemy_Death++;
             GameManager.instance.score += 120;
         }

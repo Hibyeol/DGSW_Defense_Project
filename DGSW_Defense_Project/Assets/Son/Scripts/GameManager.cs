@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
     public GameObject spawn2;
     public GameObject point1;
     public GameObject point2;
+    public GameObject flare;
     public GameObject playing;
     public GameObject clear;
     public GameObject esc;
@@ -53,6 +54,7 @@ public class GameManager : MonoBehaviour
         spawn2.SetActive(false);
         point1.SetActive(true);
         point2.SetActive(false);
+        flare.SetActive(false);
         playing.SetActive(true);
         nextRound = false;
         clear.SetActive(false);
@@ -132,6 +134,7 @@ public class GameManager : MonoBehaviour
             spawn2.SetActive(true);
             point1.SetActive(false);
             point2.SetActive(true);
+            flare.SetActive(true);
 
         }
         else

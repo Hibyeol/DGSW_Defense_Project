@@ -7,6 +7,7 @@ public class GunManager_kd : MonoBehaviour
 
     public GameObject bullet;
     public GameObject bulletEffect;
+    GameObject bE;
     float bulletSpeed = 10.0f;
 
     public GunBlueprint_kd gunBlueprint_kd;
@@ -45,7 +46,8 @@ public class GunManager_kd : MonoBehaviour
         Debug.Log(firePoint.transform.position);
         if(ifClick && !ifFireRate){
             GameObject b = Instantiate(bullet, firePoint.transform.position,Quaternion.identity); // bullet
-            GameObject bE = Instantiate(bulletEffect,firePoint.transform.position, Quaternion.identity);//bulletEffect
+            bE = Instantiate(bulletEffect, firePoint.transform.position, Quaternion.identity);//bulletEffect
+            Destroy(bE, 0.3f);
             b.GetComponent<Rigidbody>().AddForce(b.transform.forward * bulletSpeed);
 
             magazine--;
@@ -77,5 +79,6 @@ public class GunManager_kd : MonoBehaviour
         magazine = gunBlueprint_kd.magazine;
         aim.localPosition = new Vector3(0.0f, 0.0f, gunBlueprint_kd.fireRange);
     }
+
 
 }

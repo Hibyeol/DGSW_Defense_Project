@@ -6,13 +6,18 @@ using UnityEngine.AI;
 public class Reinforced_Enemy_Controller : MonoBehaviour
 {
     Animator Enemyanimator; // 애니메이터 
-    Enemy_Status1 e_status; // Enenmy 상태
-    Player_Status p_status;
+    public Enemy_Status1 e_status; // Enenmy 상태
+
+
+
+    public GameObject[] players;
+
+    Rigidbody rigid;
     NavMeshAgent nav;
 
-    public Transform target; // 플레이어 추적
+    public Transform target; // 추적 대상
     public Transform point; // 포인트 추적 
-    Rigidbody rigid;
+    public GameObject healingobj;
 
     private float speed; // 이동속도
     bool Move;
@@ -35,7 +40,8 @@ public class Reinforced_Enemy_Controller : MonoBehaviour
      
         health = e_status.defalt_Health;
         Move = true;
-        target = GameObject.FindWithTag("Player").transform;
+        //target = GameObject.FindWithTag("Player").transform;
+        players = GameObject.FindGameObjectsWithTag("Player");
         point = GameObject.FindWithTag("Defanse_Point").transform;
         isdelay = true;
 
@@ -91,9 +97,35 @@ public class Reinforced_Enemy_Controller : MonoBehaviour
             }
         }
     }
+
+    void Target()
+    {
+        Transform near_p = null;
+
+        //target = players[Random.Range(0, players.Length)].transform;
+        foreach (GameObject p in players)
+        {
+            if (Vector3.Distance(transform.position, p.transform.position) <= 10f)
+            {
+                if (!near_p || Vector3.Distance(p.transform.position, transform.position) < Vector3.Distance(near_p.position, transform.position))
+                {
+                    near_p = p.transform;
+
+                }
+
+            }
+            else
+            {
+                near_p = point.transform;
+            }
+
+        }
+        target = near_p;
+    }
     // Update is called once per frame
     void Update()
     {
+        Target();
         if (Move)
         {
             //RotateEnemy();
@@ -183,6 +215,12 @@ public class Reinforced_Enemy_Controller : MonoBehaviour
 
         GameManager.instance.enemy_Death++;
         GameManager.instance.score += 250;
+        int h;
+        h = (int)Random.Range(0, 9);
+        if (h == 1)
+        {
+            Instantiate(healingobj, new Vector3(transform.position.x, transform.position.y + 1.5f, transform.position.z), Quaternion.identity);
+        }
         Debug.Log("[REC]Death / Death : " + GameManager.instance.enemy_Death);
 
     }
